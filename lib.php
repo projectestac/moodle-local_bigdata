@@ -6,8 +6,14 @@ function bigdata_export($profileid) {
     require_once($CFG->dirroot.'/local/bigdata/exportlib.php');
 
     $bigdata = new bigdata($profileid);
-    // TODO: Change where to save
-    return $bigdata->export($CFG->dataroot, 'bigdata', $CFG->siteidentifier);
+    if (function_exists('get_admin_datadir_folder')) {
+        $directory = get_admin_datadir_folder('bigdata');
+    } else {
+        $directory = $CFG->dataroot.'/bigdata';
+        make_writable_directory($directory);
+    }
+
+    return $bigdata->export($directory, 'bigdata', $CFG->siteidentifier);
 }
 
 function bigdata_is_enabled() {
