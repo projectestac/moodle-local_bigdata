@@ -33,7 +33,9 @@ class bigdata {
         foreach ($courses as $course) {
             $this->courses[$course] = $course;
             $context = $DB->get_record('context', array('contextlevel' => '50', 'instanceid' => $course), 'id, instanceid as course, path');
-            $this->coursescontext[$context->id] = $context;
+            if ($context) {
+                $this->coursescontext[$context->id] = $context;
+            }
         }
 
         if (empty($profile->roles)) {
