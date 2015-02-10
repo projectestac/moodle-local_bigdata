@@ -18,6 +18,9 @@
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
+      <INDEXES>
+        <INDEX NAME="name" UNIQUE="true" FIELDS="name" COMMENT="The unique name for the profiles"/>
+      </INDEXES>
     </TABLE>
   </TABLES>
 </XMLDB>

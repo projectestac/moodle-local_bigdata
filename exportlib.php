@@ -14,10 +14,10 @@ class bigdata {
     private $profilename;
 
 
-    function __construct($profileid) {
+    function __construct($profilename) {
         global $DB;
 
-        $profile = $DB->get_record('bigdata_profiles', array('id' => $profileid));
+        $profile = $DB->get_record('bigdata_profiles', array('name' => $profilename));
         if (!$profile) {
             throw new Exception('Profile not found');
         }

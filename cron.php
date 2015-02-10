@@ -11,7 +11,7 @@ $now = time();
 require_once('lib.php');
 
 $profiles = $DB->get_records('bigdata_profiles');
-foreach ($profiles as $profileid => $profile) {
+foreach ($profiles as $profile) {
 
     if (empty($profile->periodicity)) {
         continue;
@@ -38,8 +38,8 @@ foreach ($profiles as $profileid => $profile) {
     }
 
     if ($now >= $nextcron) {
-        mtrace("Profile $profileid", "\n");
-        if ( bigdata_export($profileid)) {
+        mtrace("Profile $profile->name", "\n");
+        if ( bigdata_export($profile->name)) {
             $DB->set_field('bigdata_profiles', 'lastcron', $now);
         }
     }

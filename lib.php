@@ -1,11 +1,11 @@
 <?php
 
-function bigdata_export($profileid) {
+function bigdata_export($profilename) {
     global $CFG;
 
     require_once($CFG->dirroot.'/local/bigdata/exportlib.php');
 
-    $bigdata = new bigdata($profileid);
+    $bigdata = new bigdata($profilename);
     if (function_exists('get_admin_datadir_folder')) {
         $directory = get_admin_datadir_folder('bigdata');
     } else {
