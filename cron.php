@@ -20,26 +20,27 @@ foreach ($profiles as $profile) {
     $period = explode(' ', $profile->periodicity);
     $value = $period[0];
     $unit = $period[1];
-
-    $lastcronday = mktime(0, 0, 0,
-            date("n", $profile->lastcron), date("j", $profile->lastcron), date("Y", $profile->lastcron));
-    switch ($unit) {
-        case 'D':
-            $nextcron = strtotime('+'.$value.' day', $lastcronday);
-            break;
-        case 'W':
-            $nextcron = strtotime('+'.$value.' week', $lastcronday);
-            break;
-        case 'M':
-            $nextcron = strtotime('+'.$value.' month', $lastcronday);
-            break;
-        default:
-            continue;
+    if ($profile->lastcron) {
+        $lastcronday = mktime(0, 0, 0,
+                date("n", $profile->lastcron), date("j", $profile->lastcron), date("Y", $profile->lastcron));
+        switch ($unit) {
+            case 'D':
+                $nextcron = strtotime('+'.$value.' day', $lastcronday);
+                break;
+            case 'W':
+                $nextcron = strtotime('+'.$value.' week', $lastcronday);
+                break;
+            case 'M':
+                $nextcron = strtotime('+'.$value.' month', $lastcronday);
+                break;
+            default:
+                continue;
+        }
     }
 
-    if ($now >= $nextcron) {
+    if (!$profile->lastcron || $now >= $nextcron) {
         mtrace("Profile $profile->name", "\n");
-        if ( bigdata_export($profile->name)) {
+        if (bigdata_export($profile->name)) {
             $DB->set_field('bigdata_profiles', 'lastcron', $now);
         }
     }

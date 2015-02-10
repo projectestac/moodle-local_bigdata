@@ -26,28 +26,44 @@ function show_profiles() {
             $period = explode(' ', $profile->periodicity);
             $value = $period[0];
             $unit = $period[1];
-            $lastcronday = mktime(0, 0, 0,
-                date("n", $profile->lastcron), date("j", $profile->lastcron), date("Y", $profile->lastcron));
             switch ($unit) {
                 case 'D':
                     $period = $value . ' ' . get_string('days');
-                    $nextcron = strtotime('+'.$value.' day', $lastcronday);
                     break;
                 case 'W':
                     $period = $value . ' ' . get_string('weeks');
-                    $nextcron = strtotime('+'.$value.' week', $lastcronday);
                     break;
                 case 'M':
                     $period = $value . ' ' . get_string('months');
-                    $nextcron = strtotime('+'.$value.' month', $lastcronday);
                     break;
                 default:
                     continue;
             }
-            if ($nextcron < time()) {
+
+
+            if ($profile->lastcron) {
+                $lastcron = $profile->lastcron;
+                $lastcronday = mktime(0, 0, 0,
+                    date("n", $lastcron), date("j", $lastcron), date("Y", $lastcron));
+                switch ($unit) {
+                    case 'D':
+                        $nextcron = strtotime('+'.$value.' day', $lastcronday);
+                        break;
+                    case 'W':
+                        $nextcron = strtotime('+'.$value.' week', $lastcronday);
+                        break;
+                    case 'M':
+                        $nextcron = strtotime('+'.$value.' month', $lastcronday);
+                        break;
+                    default:
+                        continue;
+                }
+            }
+
+            if (!$profile->lastcron || $nextcron <= time()) {
                 $nextcron = get_string('today');
             } else {
-                $nextcron = userdate($nextcron, get_string('strftimedate', 'langconfig'));
+                $nextcron = userdate($nextcron, get_string('strftimedaydate', 'langconfig'));
             }
             $row[] = $period;
             $row[] = $nextcron;
