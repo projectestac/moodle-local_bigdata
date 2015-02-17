@@ -37,6 +37,26 @@ function xmldb_local_bigdata_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2015021000, 'local', 'bigdata');
     }
 
+    if ($oldversion < 2015021700) {
+        $table = new xmldb_table('bigdata_profiles');
+
+        $field = new xmldb_field('weekday', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0', 'periodicity');
+
+        // Conditionally launch add field weekday.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        $field = new xmldb_field('savedirectory', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null, 'lastcron');
+
+        // Conditionally launch add field savedirectory.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        upgrade_plugin_savepoint(true, 2015021700, 'local', 'bigdata');
+    }
+
 
     return true;
 }
